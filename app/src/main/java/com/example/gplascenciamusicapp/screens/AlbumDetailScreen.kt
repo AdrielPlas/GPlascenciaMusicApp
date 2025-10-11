@@ -61,6 +61,8 @@ fun AlbumDetailScreen() {
             AsyncImage(
                 model = "",
                 contentDescription = "",
+                modifier = Modifier.fillMaxSize(),
+                contentScale = ContentScale.Crop
             )
             Row(
                 modifier = Modifier
@@ -285,7 +287,8 @@ fun AlbumDetailScreen() {
                 Box(
                     modifier = Modifier
                         .align(Alignment.CenterVertically)
-                        .size(30.dp)
+                        .padding(10.dp)
+                        .size(40.dp)
                         .clip(CircleShape)
                         .background(Color.White),
                     contentAlignment = Alignment.Center,
