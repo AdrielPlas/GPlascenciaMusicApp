@@ -1,8 +1,11 @@
 package com.example.gplascenciamusicapp.screens
 
 import android.text.Layout
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -23,133 +26,109 @@ import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Refresh
+import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import coil3.compose.AsyncImage
 import com.example.gplascenciamusicapp.Main
+import com.example.gplascenciamusicapp.components.AlbumDetailCardRow
+import com.example.gplascenciamusicapp.components.DetailAlbumImage
+import com.example.gplascenciamusicapp.components.ReproductorCard
+import com.example.gplascenciamusicapp.models.Album
+import com.example.gplascenciamusicapp.services.AlbumService
 import com.example.gplascenciamusicapp.ui.theme.AlbumDetailColor
+import com.example.gplascenciamusicapp.ui.theme.AlbumTitleColor
 import com.example.gplascenciamusicapp.ui.theme.BackGroundCard
 import com.example.gplascenciamusicapp.ui.theme.BackGroundGradient
 import com.example.gplascenciamusicapp.ui.theme.BackGroundImageGradient
 import com.example.gplascenciamusicapp.ui.theme.ButtonPlayGradient
 import com.example.gplascenciamusicapp.ui.theme.GPlascenciaMusicAppTheme
 import com.example.gplascenciamusicapp.ui.theme.ReproductorCard
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 
 @Composable
-fun AlbumDetailScreen() {
+fun AlbumDetailScreen(id: String, navController: NavController) {
+    var album by remember {
+        mutableStateOf<Album?>(null)
+    }
+    var loading by remember {
+        mutableStateOf(true)
+    }
+    // DEBUG: Verificar el ID que llega
+    Log.i("AlbumDetailScreen", "ID recibido: '$id'")
+
+    LaunchedEffect(id) {
+        try {
+            val retrofit = Retrofit
+                .Builder()
+                .baseUrl("https://music.juanfrausto.com/api/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build()
+            val service = retrofit.create(AlbumService::class.java)
+            val result = withContext(Dispatchers.IO){
+                service.getAlbumById(id)
+            }
+            album = result
+            loading = false
+            Log.i("AlbumDetailScreen", album.toString())
+        }
+        catch (e: Exception){
+            loading = false
+            Log.e("AlbumDetailScreen", e.toString())
+        }
+    }
+    if (loading) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(BackGroundGradient),
+            contentAlignment = Alignment.Center
+        ) {
+            Text("Cargando álbum...", color = Color.White)
+        }
+        return
+    }
+    if (album == null) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(BackGroundGradient),
+            contentAlignment = Alignment.Center
+        ) {
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                Text("No se pudo cargar el álbum", color = Color.White)
+                Text("ID: $id", color = Color.White)
+            }
+        }
+        return
+    }
+    // INICIO UI
     Column(modifier = Modifier
         .fillMaxSize()
         .background(BackGroundGradient)
-        .padding(15.dp)) {
+        .padding(top = 45.dp, start =  15.dp, end = 15.dp, bottom = 15.dp)) {
         // IMAGEN PRINCIPAL
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(350.dp)
-                .clip(RoundedCornerShape(16.dp))
-                .background(BackGroundImageGradient)
-
-        ) {
-            AsyncImage(
-                model = "",
-                contentDescription = "",
-                modifier = Modifier.fillMaxSize(),
-                contentScale = ContentScale.Crop
-            )
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(15.dp)
-                    .align(Alignment.TopStart)
-            ) {
-                Box(
-                    modifier = Modifier
-                        .clip(CircleShape)
-                        .size(30.dp)
-                        .background(Color.Black),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.ArrowBack,
-                        contentDescription = "back",
-                        tint = Color.White
-                    )
-                }
-                Spacer(modifier = Modifier.weight(1f))
-                Box(
-                    modifier = Modifier
-                        .clip(CircleShape)
-                        .size(30.dp)
-                        .background(Color.Black),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Favorite,
-                        contentDescription = "favorite",
-                        tint = Color.White,
-                        modifier = Modifier.size(20.dp)
-                    )
-                }
-            }
-            // Detalles
-            Column(
-                modifier = Modifier
-                    .align(Alignment.BottomStart)
-                    .padding(15.dp)
-            ) {
-                Text(
-                    text = "album.title"
-                )
-                Text(
-                    text = "album.artist"
-                )
-                Row(
-                    modifier = Modifier.padding(top = 10.dp)
-                ) {
-                    Box(
-                        modifier = Modifier
-                            .align(Alignment.CenterVertically)
-                            .size(55.dp)
-                            .clip(CircleShape)
-                            .background(Color.Black),
-                        contentAlignment = Alignment.Center,
-
-                        ) {
-                        Icon(
-                            imageVector = Icons.Default.PlayArrow,
-                            contentDescription = "play",
-                            tint = Color.White,
-                            modifier = Modifier.size(30.dp)
-                        )
-                    }
-                    Spacer(modifier = Modifier.width(10.dp))
-                    Box(
-                        modifier = Modifier
-                            .align(Alignment.CenterVertically)
-                            .size(55.dp)
-                            .clip(CircleShape)
-                            .background(Color.Black),
-                        contentAlignment = Alignment.Center,
-
-                        ) {
-                        Icon(
-                            imageVector = Icons.Default.Refresh,
-                            contentDescription = "reiniciar",
-                            tint = Color.White,
-                            modifier = Modifier.size(30.dp)
-                        )
-                    }
-                }
-            }
-        }
+        DetailAlbumImage(album, navController)
         // Tarjeta de descripcion
         Column(
             modifier = Modifier
@@ -162,13 +141,15 @@ fun AlbumDetailScreen() {
                 text = "About this album",
                 color = Color.White,
                 modifier = Modifier
-                    .padding(top = 10.dp, start = 10.dp, bottom = 5.dp)
+                    .padding(top = 10.dp, start = 10.dp, bottom = 5.dp),
+                style = MaterialTheme.typography.bodyLarge
             )
             Text(
-                text = "album.description",
+                text = album?.description ?: "Descripción no disponible",
                 color = Color.White,
                 modifier = Modifier
-                    .padding(start = 10.dp, bottom = 8.dp   )
+                    .padding(start = 10.dp, bottom = 8.dp   ),
+                style = MaterialTheme.typography.bodyMedium
             )
         }
         // Artistas
@@ -179,10 +160,11 @@ fun AlbumDetailScreen() {
                 .background(AlbumDetailColor)
         ) {
             Text(
-                text = "album.artist",
+                text = album?.artist ?: "Artista no disponible",
                 color = Color.White,
                 modifier = Modifier
-                    .padding(8.dp)
+                    .padding(8.dp),
+                style = MaterialTheme.typography.bodyLarge
             )
         }
         // Tracks
@@ -194,122 +176,16 @@ fun AlbumDetailScreen() {
                 modifier = Modifier
                     .fillMaxWidth()
             ) {
-                items(10){
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(80.dp)
-                            .padding(bottom = 10.dp)
-                            .clip(RoundedCornerShape(20.dp))
-                            .background(BackGroundCard)
-                    ) {
-                        // Imagen
-                        Box(
-                            modifier = Modifier
-                                .padding(10.dp)
-                                .size(50.dp)
-                                .clip(RoundedCornerShape(16.dp))
-                                .background(Color.LightGray)
-                        ){
-                            AsyncImage(
-                                model = "album.image",
-                                contentDescription = "album.title",
-                                modifier = Modifier.fillMaxSize(),
-                                contentScale = ContentScale.Crop
-                            )
-                        }
-                        // Detalles
-                        Column(
-                            modifier = Modifier
-                                .padding(vertical = 10.dp)
-                                .weight(1f)
-                        ) {
-                            Text(
-                                text = "${"album.title"} * Track ${"1++"}",
-                                color = Color.White,
-                            )
-                            Text(
-                                text = "album.artist",
-                                color = Color.White,
-                            )
-                        }
-                        Icon(
-                            imageVector = Icons.Default.MoreVert,
-                            contentDescription = "Detalles",
-                            modifier = Modifier
-                                .align(Alignment.CenterVertically)
-                                .padding(end = 10.dp),
-                            tint = Color.White
-                        )
-                    }
+                items(10){ count ->
+                    AlbumDetailCardRow(album, count)
                 }
             }
             // Reproducir
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(80.dp)
-                    .clip(RoundedCornerShape(20.dp))
-                    .background(ReproductorCard)
-                    .align(Alignment.BottomStart),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                // Imagen
-                Box(
-                    modifier = Modifier
-                        .padding(10.dp)
-                        .size(50.dp)
-                        .clip(RoundedCornerShape(16.dp))
-                        .background(Color.White)
-                ){
-                    AsyncImage(
-                        model = "",
-                        contentDescription = "",
-                        modifier = Modifier.fillMaxSize(),
-                        contentScale = ContentScale.Crop
-                    )
-                }
-                // Detalles
-                Column(
-                    modifier = Modifier
-                        .padding(vertical = 10.dp)
-                        .weight(1f)
-                ) {
-                    Text(
-                        text = "nombre del album",
-                        color = Color.White,
-                    )
-                    Text(
-                        text = "autor + * Popular song",
-                        color = Color.White,
-                    )
-                }
-                Box(
-                    modifier = Modifier
-                        .align(Alignment.CenterVertically)
-                        .padding(10.dp)
-                        .size(40.dp)
-                        .clip(CircleShape)
-                        .background(Color.White),
-                    contentAlignment = Alignment.Center,
-
-                    ) {
-                    Icon(
-                        imageVector = Icons.Default.PlayArrow,
-                        contentDescription = "play",
-                        tint = Color.Black
-                    )
-                }
+            Box(
+                modifier = Modifier.align(Alignment.BottomCenter)
+            ){
+                ReproductorCard(album)
             }
         }
-
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    GPlascenciaMusicAppTheme {
-        AlbumDetailScreen()
     }
 }

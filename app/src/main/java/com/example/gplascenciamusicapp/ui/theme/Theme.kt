@@ -52,7 +52,7 @@ fun GPlascenciaMusicAppTheme(
 
     MaterialTheme(
         colorScheme = colorScheme,
-        typography = Typography,
+        typography = gothamTypo,
         content = content
     )
 }

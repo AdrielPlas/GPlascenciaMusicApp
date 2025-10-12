@@ -47,6 +47,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import coil3.compose.AsyncImage
+import com.example.gplascenciamusicapp.screens.AlbumDetailScreen
 import com.example.gplascenciamusicapp.screens.HomeScreen
 import com.example.gplascenciamusicapp.ui.theme.AlbumDetailScreenRoute
 import com.example.gplascenciamusicapp.ui.theme.GPlascenciaMusicAppTheme
@@ -71,7 +72,7 @@ class MainActivity : ComponentActivity() {
                         }
                         composable<AlbumDetailScreenRoute> { backStack ->
                             val args = backStack.toRoute<AlbumDetailScreenRoute>()
-                            AlbumDetailScreenRoute(args.id)
+                            AlbumDetailScreen(args.id, navController = navController)
                         }
                     }
                 }

@@ -25,6 +25,7 @@ import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -36,13 +37,30 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import coil3.compose.AsyncImage
+import com.example.gplascenciamusicapp.components.AlbumCardRow
+import com.example.gplascenciamusicapp.components.AlbumCardsBox
+import com.example.gplascenciamusicapp.components.Header
+import com.example.gplascenciamusicapp.components.ReproductorCard
 import com.example.gplascenciamusicapp.models.Album
 import com.example.gplascenciamusicapp.services.AlbumService
+import com.example.gplascenciamusicapp.ui.theme.AlbumDetailScreenRoute
+import com.example.gplascenciamusicapp.ui.theme.BackGroundCard
 import com.example.gplascenciamusicapp.ui.theme.BackGroundGradient
+import com.example.gplascenciamusicapp.ui.theme.BackGroundImageGradient
+import com.example.gplascenciamusicapp.ui.theme.ButtonPlayGradient
+import com.example.gplascenciamusicapp.ui.theme.GPlascenciaMusicAppTheme
+import com.example.gplascenciamusicapp.ui.theme.ReproductorCard
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.async
@@ -63,7 +81,7 @@ fun HomeScreen(
         try{
             val retrofit = Retrofit
                 .Builder()
-                .baseUrl("https://music.juanfrausto.com/api/albums/")
+                .baseUrl("https://music.juanfrausto.com/api/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build()
             val service = retrofit.create(AlbumService::class.java)
@@ -91,7 +109,7 @@ fun HomeScreen(
         Column(modifier = Modifier
             .fillMaxSize()
             .background(BackGroundGradient)
-            .padding(15.dp)
+            .padding(top = 40.dp, start = 15.dp, end = 15.dp, bottom = 20.dp)
         ) {
             // Header
             Column(
@@ -99,57 +117,29 @@ fun HomeScreen(
                     .weight(2f)
                     .padding(start = 5.dp, end = 5.dp, top = 5.dp)
                     .clip(RoundedCornerShape(18.dp))
-                    .background(Color.Blue)
+                    .background(ButtonPlayGradient)
             ) {
-                // Botones
-                Row(
-                    modifier = Modifier.padding(vertical = 15.dp, horizontal = 15.dp).fillMaxWidth(),
-                    horizontalArrangement = Arrangement.Center,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Box(
-                        modifier = Modifier.weight(1f).fillMaxWidth()
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.Menu,
-                            contentDescription = "back",
-                            modifier = Modifier
-                                .align(Alignment.CenterStart)
-                                .clickable{
-
-                                },
-                            tint = Color.Black
-                        )
-                        Icon(
-                            imageVector = Icons.Default.Search,
-                            contentDescription = "favorite",
-                            modifier = Modifier
-                                .align(Alignment.CenterEnd)
-                        )
-                    }
-                }
-                // Textos
-                Text(
-                    text = "Good Morning!",
-                    modifier = Modifier.padding(start = 15.dp)
-                )
-                Text(
-                    text = "Adriel Plascencia",
-                    modifier = Modifier.padding(start = 15.dp)
-                )
+                Header()
             }
             // Albums
-            Column(modifier = Modifier.weight(4f).padding(horizontal = 5.dp)) {
+            Column(modifier = Modifier
+                .weight(4f)
+                .padding(horizontal = 5.dp)) {
                 Row(
                     modifier = Modifier
                         .padding(top = 15.dp)
                 ) {
                     Text(
                         text = "Albums",
-                        modifier = Modifier.weight(1f)
+                        modifier = Modifier.weight(1f),
+                        color = Color.White,
+                        fontWeight = FontWeight.Bold,
+                        style = MaterialTheme.typography.titleMedium
                     )
                     Text(
-                        text = "See more"
+                        text = "See more",
+                        color = Color.White,
+                        style = MaterialTheme.typography.labelMedium
                     )
                 }
                 LazyRow(
@@ -158,65 +148,12 @@ fun HomeScreen(
                         .padding(top = 7.dp, bottom = 10.dp)
                 ) {
                     items(albums){ album ->
-                        Box(
-                            modifier = Modifier
-                                .width(220.dp)
-                                .padding(end = 20.dp)
-                                .clip(RoundedCornerShape(18.dp))
-                                .background(Color.Gray)
-                        ) {
-                            AsyncImage(
-                                model = album.image,
-                                contentDescription = album.title,
-                                modifier = Modifier.fillMaxSize(),
-                                contentScale = ContentScale.Crop
-                            )
-                            Box(
-                                modifier = Modifier
-                                    .fillMaxSize()
-                                    .padding(15.dp)
-                            ) {
-                                Box(
-                                    modifier = Modifier
-                                        .align(Alignment.BottomCenter)
-                                        .fillMaxWidth()
-                                        .clip(RoundedCornerShape(16.dp))
-                                        .background(Color.LightGray)
-                                        .padding(10.dp)
-                                ) {
-                                    Row(
-                                        modifier = Modifier.fillMaxWidth()
-                                    ) {
-                                        Column(
-                                            modifier = Modifier.weight(1f)
-                                        ) {
-                                            Text(
-                                                text = album.title
-                                            )
-                                            Text(
-                                                text = album.artist
-                                            )
-                                        }
-                                        Box(
-                                            modifier = Modifier
-                                                .align(Alignment.CenterVertically)
-                                                .size(30.dp)
-                                                .clip(CircleShape)
-                                                .background(Color.White),
-                                            contentAlignment = Alignment.Center,
-
-                                            ) {
-                                            Icon(
-                                                imageVector = Icons.Default.PlayArrow,
-                                                contentDescription = "play",
-                                                tint = Color.Black
-                                            )
-                                        }
-                                    }
-                                }
+                        AlbumCardsBox(
+                            album = album,
+                            onClick = {
+                                navController.navigate(AlbumDetailScreenRoute(album.id))
                             }
-
-                        }
+                            )
                     }
 
                 }
@@ -226,123 +163,47 @@ fun HomeScreen(
                 ) {
                     Text(
                         text = "Recently Played",
-                        modifier = Modifier.weight(1f)
+                        modifier = Modifier.weight(1f),
+                        color = Color.White,
+                        fontWeight = FontWeight.Bold,
+                        style = MaterialTheme.typography.titleMedium
                     )
                     Text(
-                        text = "See more"
+                        text = "See more",
+                        color = Color.White,
+                        style = MaterialTheme.typography.labelMedium
                     )
                 }
 
             }
             // Recently Played
-            Column(modifier = Modifier
-                .weight(5f)
-                .padding(top = 10.dp, start = 5.dp, end = 5.dp)
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .weight(6f)
             ) {
-                LazyColumn(
-                    modifier = Modifier
-                        .fillMaxWidth()
+                Column(modifier = Modifier
+                    .padding(top = 10.dp, start = 5.dp, end = 5.dp)
                 ) {
-                    items(albums){ album ->
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(80.dp)
-                                .padding(bottom = 10.dp)
-                                .clip(RoundedCornerShape(20.dp))
-                                .background(Color.LightGray)
-                        ) {
-                            // Imagen
-                            Box(
-                                modifier = Modifier
-                                    .padding(10.dp)
-                                    .size(50.dp)
-                                    .clip(RoundedCornerShape(16.dp))
-                                    .background(Color.White)
-                            ){
-                                AsyncImage(
-                                    model = album.image,
-                                    contentDescription = album.title,
-                                    modifier = Modifier.fillMaxSize(),
-                                    contentScale = ContentScale.Crop
-                                )
-                            }
-                            // Detalles
-                            Column(
-                                modifier = Modifier
-                                    .padding(vertical = 10.dp)
-                                    .weight(1f)
-                            ) {
-                                Text(
-                                    text = album.title
-                                )
-                                Text(
-                                    text = "${album.artist} * Popular song"
-                                )
-                            }
-                            Icon(
-                                imageVector = Icons.Default.MoreVert,
-                                contentDescription = "Detalles",
-                                modifier = Modifier
-                                    .align(Alignment.CenterVertically)
-                                    .padding(end = 10.dp)
+                    LazyColumn(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                    ) {
+                        items(albums){ album ->
+                            AlbumCardRow(
+                                album = album,
+                                onClick = {
+                                    navController.navigate(AlbumDetailScreenRoute(album.id))
+                                }
                             )
                         }
                     }
                 }
-            }
-            // Reproductor
-            Column(modifier = Modifier.weight(1f)) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(80.dp)
-                        .clip(RoundedCornerShape(20.dp))
-                        .background(Color.LightGray)
-                ) {
-                    // Imagen
-                    Box(
-                        modifier = Modifier
-                            .padding(10.dp)
-                            .size(50.dp)
-                            .clip(RoundedCornerShape(16.dp))
-                            .background(Color.White)
-                    ){
-                        AsyncImage(
-                            model = "",
-                            contentDescription = "",
-                            modifier = Modifier.fillMaxSize(),
-                            contentScale = ContentScale.Crop
-                        )
-                    }
-                    // Detalles
-                    Column(
-                        modifier = Modifier
-                            .padding(vertical = 10.dp)
-                            .weight(1f)
-                    ) {
-                        Text(
-                            text = "nombre del album"
-                        )
-                        Text(
-                            text = "autor + * Popular song"
-                        )
-                    }
-                    Box(
-                        modifier = Modifier
-                            .align(Alignment.CenterVertically)
-                            .size(30.dp)
-                            .clip(CircleShape)
-                            .background(Color.White),
-                        contentAlignment = Alignment.Center,
-
-                        ) {
-                        Icon(
-                            imageVector = Icons.Default.PlayArrow,
-                            contentDescription = "play",
-                            tint = Color.Black
-                        )
-                    }
+                // Reproductor
+                Box(
+                    modifier = Modifier.align(Alignment.BottomCenter)
+                ){
+                    ReproductorCard(albums[0])
                 }
             }
         }

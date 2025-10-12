@@ -28,8 +28,8 @@ val BackGroundImageGradient = Brush.verticalGradient(
 
 val ButtonPlayGradient = Brush.horizontalGradient(
     colors = listOf(
-        Color(rgb(146, 106, 243)),
-        Color(rgb(116, 75, 246))
+        Color(rgb(4, 14, 5)),
+        Color(rgb(7, 27, 10))
     )
 )
 
@@ -38,3 +38,5 @@ val ReproductorCard = Color(rgb(6, 54, 14))
 val BackGroundCard = Color(rgb(0, 98, 17))
 
 val AlbumDetailColor = Color(rgb(0, 111, 19))
+
+val AlbumTitleColor = Color(rgb(27, 194, 86))
