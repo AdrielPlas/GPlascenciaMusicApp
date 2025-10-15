@@ -28,11 +28,15 @@ import coil3.compose.AsyncImage
 import com.example.gplascenciamusicapp.models.Album
 import com.example.gplascenciamusicapp.ui.theme.BackGroundCard
 
+/*
+ Componentes en el AlbumDetailScreen, parte inferior, que muestran el album, su nombre + N Track, artista y los 3 puntos, respecto a un LazyColumn
+ */
 @Composable
 fun AlbumDetailCardRow(
     album : Album?,
     count : Int
 ) {
+    // Card principal
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -73,12 +77,14 @@ fun AlbumDetailCardRow(
                 .padding(vertical = 16.dp)
                 .weight(1f)
         ) {
+            // Nombre de album + Track N
             Text(
                 text = "${album?.title} - Track ${count + 1}",
                 color = Color.White,
                 style = MaterialTheme.typography.titleMedium,
                 modifier = Modifier.weight(1f)
             )
+            // Nombre del artista
             Text(
                 text = album?.artist ?: "Artista",
                 color = Color.White,
@@ -86,6 +92,7 @@ fun AlbumDetailCardRow(
                 fontWeight = FontWeight.Medium
             )
         }
+        // 3 puntos para mas detalles
         Icon(
             imageVector = Icons.Default.MoreVert,
             contentDescription = "Detalles",

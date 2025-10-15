@@ -36,11 +36,15 @@ import coil3.compose.AsyncImage
 import com.example.gplascenciamusicapp.models.Album
 import com.example.gplascenciamusicapp.ui.theme.AlbumTitleColor
 
+/*
+ Componentes en el AlbumDetailScreen, parte superior (principal), que muestran los icionos de regresar, corazon, la portada del album, su nombre, artista y los simbolos de play y shuffle
+ */
 @Composable
 fun DetailAlbumImage(
     album : Album?,
     navController : NavController
 ){
+    // Contenedor principal
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -48,18 +52,21 @@ fun DetailAlbumImage(
             .clip(RoundedCornerShape(16.dp))
             .background(Color.Black)
     ) {
+        // Portada del album
         AsyncImage(
             model = album?.image ?: "",
             contentDescription = album?.title,
             modifier = Modifier.fillMaxSize(),
             contentScale = ContentScale.Crop
         )
+        // Seccion de botones de regresar y favoritos
         Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(15.dp)
                 .align(Alignment.TopStart)
         ) {
+            // Contenedor de icono de regresar <-
             Box(
                 modifier = Modifier
                     .clip(CircleShape)
@@ -70,13 +77,16 @@ fun DetailAlbumImage(
                     },
                 contentAlignment = Alignment.Center
             ) {
+                // Icono de regresar <-
                 Icon(
                     imageVector = Icons.Default.ArrowBack,
                     contentDescription = "back",
                     tint = Color.White
                 )
             }
+            // Espacio para separar los 2 iconos
             Spacer(modifier = Modifier.weight(1f))
+            // Contenedor para el icono de favorito
             Box(
                 modifier = Modifier
                     .clip(CircleShape)
@@ -84,6 +94,7 @@ fun DetailAlbumImage(
                     .background(Color.Black),
                 contentAlignment = Alignment.Center
             ) {
+                // Icono de favorito/corazon
                 Icon(
                     imageVector = Icons.Default.Favorite,
                     contentDescription = "favorite",
@@ -92,12 +103,13 @@ fun DetailAlbumImage(
                 )
             }
         }
-        // Detalles
+        // Detalles con cuidado si el objeto es null
         Column(
             modifier = Modifier
                 .align(Alignment.BottomStart)
                 .padding(15.dp)
         ) {
+            // Titulo del album
             Text(
                 text = album?.title ?: "Título no disponible",
                 color = AlbumTitleColor,
@@ -106,15 +118,18 @@ fun DetailAlbumImage(
                 fontWeight = FontWeight.Bold,
                 fontSize = 30.sp
             )
+            // Nombre del artista del album
             Text(
                 text = album?.artist ?: "Artista no disponible",
                 color = Color.White,
                 style = MaterialTheme.typography.bodyMedium,
                 modifier = Modifier.padding(start = 8.dp)
             )
+            // Contenedor para los botones de play y Shuffle
             Row(
                 modifier = Modifier.padding(top = 10.dp)
             ) {
+                // Contendero para el icono de play
                 Box(
                     modifier = Modifier
                         .align(Alignment.CenterVertically)
@@ -122,8 +137,8 @@ fun DetailAlbumImage(
                         .clip(CircleShape)
                         .background(Color.Black),
                     contentAlignment = Alignment.Center,
-
                     ) {
+                    // Icono de PLAY
                     Icon(
                         imageVector = Icons.Default.PlayArrow,
                         contentDescription = "play",
@@ -131,7 +146,9 @@ fun DetailAlbumImage(
                         modifier = Modifier.size(30.dp)
                     )
                 }
+                // Espaciador entre los 2 iconos
                 Spacer(modifier = Modifier.width(10.dp))
+                // Contenedor para el icono de Shuffle
                 Box(
                     modifier = Modifier
                         .align(Alignment.CenterVertically)
@@ -139,8 +156,8 @@ fun DetailAlbumImage(
                         .clip(CircleShape)
                         .background(Color.Black),
                     contentAlignment = Alignment.Center,
-
                     ) {
+                    // Icono de Shuffle
                     Icon(
                         imageVector = Icons.Default.Shuffle,
                         contentDescription = "reiniciar",

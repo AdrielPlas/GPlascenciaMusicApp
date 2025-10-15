@@ -34,11 +34,16 @@ import coil3.compose.AsyncImage
 import com.example.gplascenciamusicapp.models.Album
 import com.example.gplascenciamusicapp.ui.theme.ReproductorCard
 
+/*
+Componente fijo en el HomeScreen y AlbumDetailScreen en la parte inferior, el cual muestra el album seleccionado, su nombre, artista y un boton que cambia de Play y Pause
+ */
 @Composable
 fun ReproductorCard(
     album : Album?
 ) {
+    // Variable de estado playing o pause
     var isPlaying by remember { mutableStateOf(false) }
+    // Contenedor General para alinear hasta abajo de otro Box (componente padre)
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -46,19 +51,21 @@ fun ReproductorCard(
             .clip(RoundedCornerShape(20.dp))
             .background(ReproductorCard)
     ) {
+        // Contenedor para organizar los componentes horizontalmente
         Row(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(horizontal = 10.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            // Imagen
+            // Contenedor para la portada del album
             Box(
                 modifier = Modifier
                     .size(50.dp)
                     .clip(RoundedCornerShape(16.dp))
                     .background(Color.Black)
             ) {
+                // Portada del album
                 AsyncImage(
                     model = album?.image ?: "",
                     contentDescription = album?.title ?: "no encontrado",
@@ -66,18 +73,20 @@ fun ReproductorCard(
                     contentScale = ContentScale.Crop
                 )
             }
-            // Detalles
+            // Detalles del album vertical
             Column(
                 modifier = Modifier
                     .padding(vertical = 16.dp, horizontal = 10.dp)
                     .weight(1f)
             ) {
+                // Titulo del album
                 Text(
                     text = album?.title ?: "Titulo no encontrado",
                     color = Color.White,
                     style = MaterialTheme.typography.titleMedium,
                     modifier = Modifier.weight(1f)
                 )
+                // Artista del album
                 Text(
                     text = album?.artist ?: "Artista no encontrado",
                     color = Color.White,
@@ -96,8 +105,9 @@ fun ReproductorCard(
                               },
                 contentAlignment = Alignment.Center,)
             {
+                // Icono que cambia al ser presionado (inicialmente es muestra play)
                 Icon(
-                    imageVector = if(isPlaying) Icons.Default.Pause else Icons.Default.PlayArrow,
+                    imageVector = if(isPlaying) Icons.Default.Pause else Icons.Default.PlayArrow, // Accion de mostrar segun el estado
                     contentDescription = if (isPlaying) "pause" else "play",
                     tint = Color.Black
                 )

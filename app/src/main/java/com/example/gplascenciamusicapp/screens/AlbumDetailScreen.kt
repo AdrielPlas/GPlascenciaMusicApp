@@ -37,9 +37,11 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 @Composable
 fun AlbumDetailScreen(id: String, navController: NavController) {
+    // Objeto clickeado y accedido mediante su id
     var album by remember {
         mutableStateOf<Album?>(null)
     }
+    // Variable para estado en lo que se consume la API
     var loading by remember {
         mutableStateOf(true)
     }
@@ -65,6 +67,7 @@ fun AlbumDetailScreen(id: String, navController: NavController) {
             Log.e("AlbumDetailScreen", e.toString())
         }
     }
+    // Animacion mientras carga
     if (loading) {
         Box(
             modifier = Modifier
@@ -95,7 +98,7 @@ fun AlbumDetailScreen(id: String, navController: NavController) {
         .fillMaxSize()
         .background(BackGroundGradient)
         .padding(top = 45.dp, start =  15.dp, end = 15.dp, bottom = 15.dp)) {
-        // IMAGEN PRINCIPAL
+        // IMAGEN DEL ALBUM PRINCIPAL
         DetailAlbumImage(album, navController)
         // Tarjeta de descripcion
         Column(
@@ -105,6 +108,7 @@ fun AlbumDetailScreen(id: String, navController: NavController) {
                 .clip(RoundedCornerShape(16.dp))
                 .background(AlbumDetailColor)
         ) {
+            // Texto sobre el album
             Text(
                 text = "About this album",
                 color = Color.White,
@@ -112,6 +116,7 @@ fun AlbumDetailScreen(id: String, navController: NavController) {
                     .padding(top = 10.dp, start = 10.dp, bottom = 5.dp),
                 style = MaterialTheme.typography.bodyLarge
             )
+            // Descripcion del album
             Text(
                 text = album?.description ?: "Descripción no disponible",
                 color = Color.White,
@@ -120,13 +125,14 @@ fun AlbumDetailScreen(id: String, navController: NavController) {
                 style = MaterialTheme.typography.bodyMedium
             )
         }
-        // Artistas
+        // Contenedor para el artista
         Column(
             modifier = Modifier
                 .padding(top = 10.dp, bottom = 10.dp)
                 .clip(RoundedCornerShape(18.dp))
                 .background(AlbumDetailColor)
         ) {
+            // Artista del album
             Text(
                 text = album?.artist ?: "Artista no disponible",
                 color = Color.White,
@@ -135,11 +141,12 @@ fun AlbumDetailScreen(id: String, navController: NavController) {
                 style = MaterialTheme.typography.bodyLarge
             )
         }
-        // Tracks
+        // Mostrar los Tracks del album, Contenedor principal para un LazyColumn
         Box(
             modifier = Modifier
                 .fillMaxSize()
         ){
+            // Se mostraran las tarjetas de cada Track
             LazyColumn(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -148,7 +155,7 @@ fun AlbumDetailScreen(id: String, navController: NavController) {
                     AlbumDetailCardRow(album, count)
                 }
             }
-            // Reproducir
+            // Contenedor para el reproductor fijo en la parte inferior
             Box(
                 modifier = Modifier.align(Alignment.BottomCenter)
             ){

@@ -1,6 +1,5 @@
 package com.example.gplascenciamusicapp.components
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -18,9 +17,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 
+/*
+ Componente en el HomeScreen para mostrar la bienvenida, en el apartado superior, con botones de menu, buscar y textos de bienvenida.
+ */
 @Composable
 fun Header() {
-    // Botones
+    // Contenedor de los botones superiores
     Row(
         modifier = Modifier
             .padding(vertical = 15.dp, horizontal = 15.dp)
@@ -28,37 +30,38 @@ fun Header() {
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically
     ) {
+        // Contenedor para el icono de back y de buscar
         Box(
             modifier = Modifier
                 .weight(1f)
                 .fillMaxWidth()
         ) {
+            // Icono de Back
             Icon(
                 imageVector = Icons.Default.Menu,
                 contentDescription = "back",
                 modifier = Modifier
-                    .align(Alignment.CenterStart)
-                    .clickable {
-
-                    },
+                    .align(Alignment.CenterStart),
                 tint = Color.White
             )
+            // Icono de buscar
             Icon(
                 imageVector = Icons.Default.Search,
-                contentDescription = "favorite",
+                contentDescription = "search",
                 modifier = Modifier
                     .align(Alignment.CenterEnd),
                 tint = Color.White
             )
         }
     }
-    // Textos
+    // Textos de bienvenida
     Text(
         text = "Good Morning!",
         modifier = Modifier.padding(start = 15.dp, bottom = 12.dp),
         color = Color.White,
         style = MaterialTheme.typography.titleLarge
     )
+    // Nombre del usuario
     Text(
         text = "Adriel Plascencia",
         modifier = Modifier.padding(start = 15.dp),

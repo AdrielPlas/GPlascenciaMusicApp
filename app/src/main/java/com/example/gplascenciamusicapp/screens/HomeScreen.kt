@@ -46,9 +46,11 @@ import retrofit2.converter.gson.GsonConverterFactory
 fun HomeScreen(
     navController: NavController
 ){
+    // Lista de los albumes de la API
     var albums by remember {
         mutableStateOf(listOf<Album>())
     }
+    // Variable para el estado mientras se consume la API
     var loading by remember {
         mutableStateOf(true)
     }
@@ -72,6 +74,7 @@ fun HomeScreen(
             Log.e("HomeScreen", e.toString())
         }
     }
+    // Animacion mientras carga la API
     if(loading){
         Box(
             modifier = Modifier.fillMaxSize(),
@@ -81,12 +84,13 @@ fun HomeScreen(
         }
     }
     else{
+        // Inicio del UI, Columna principal (alinear los componentes verticalmente)
         Column(modifier = Modifier
             .fillMaxSize()
             .background(BackGroundGradient)
             .padding(top = 40.dp, start = 15.dp, end = 15.dp, bottom = 20.dp)
         ) {
-            // Header
+            // Contenedor del Header
             Column(
                 modifier = Modifier
                     .weight(2f)
@@ -94,16 +98,19 @@ fun HomeScreen(
                     .clip(RoundedCornerShape(18.dp))
                     .background(ButtonPlayGradient)
             ) {
+                // Componente Header
                 Header()
             }
-            // Albums
+            // Contenedor para Textos y el LazyRow de los albumes
             Column(modifier = Modifier
                 .weight(4f)
                 .padding(horizontal = 5.dp)) {
+                // Contenedor para textos superiores
                 Row(
                     modifier = Modifier
                         .padding(top = 15.dp)
                 ) {
+                    // Texto ALBUMS
                     Text(
                         text = "Albums",
                         modifier = Modifier.weight(1f),
@@ -111,18 +118,21 @@ fun HomeScreen(
                         fontWeight = FontWeight.Bold,
                         style = MaterialTheme.typography.titleMedium
                     )
+                    // Boton de See more
                     Text(
                         text = "See more",
                         color = Color.White,
                         style = MaterialTheme.typography.labelMedium
                     )
                 }
+                // Contenedor para los AlbumCardBox iterando la lista de albums
                 LazyRow(
                     modifier = Modifier
                         .weight(1f)
                         .padding(top = 7.dp, bottom = 10.dp)
                 ) {
                     items(albums){ album ->
+                        // Componente que cambia segun cada item de la lista
                         AlbumCardsBox(
                             album = album,
                             onClick = {
@@ -131,9 +141,11 @@ fun HomeScreen(
                         )
                     }
                 }
+                // Contenedor para los textos inferiores
                 Row(
                     modifier = Modifier
                 ) {
+                    // Texto de RECENTLY PLAYES
                     Text(
                         text = "Recently Played",
                         modifier = Modifier.weight(1f),
@@ -141,6 +153,7 @@ fun HomeScreen(
                         fontWeight = FontWeight.Bold,
                         style = MaterialTheme.typography.titleMedium
                     )
+                    // Texto de SEE MORE
                     Text(
                         text = "See more",
                         color = Color.White,
@@ -148,20 +161,23 @@ fun HomeScreen(
                     )
                 }
             }
-            // Recently Played
+            // Contenedor para los albumes listados y el reproductor fijo
             Box(
                 modifier = Modifier
                     .fillMaxSize()
                     .weight(6f)
             ) {
+                // Contenedor con un estilo
                 Column(modifier = Modifier
                     .padding(top = 10.dp, start = 5.dp, end = 5.dp)
                 ) {
+                    // Contenedor de los cards Horizontales
                     LazyColumn(
                         modifier = Modifier
                             .fillMaxWidth()
                     ) {
                         items(albums){ album ->
+                            // Componente que muestra cada item de la lista
                             AlbumCardRow(
                                 album = album,
                                 onClick = {
@@ -171,10 +187,11 @@ fun HomeScreen(
                         }
                     }
                 }
-                // Reproductor
+                // Contenedor para fijar el REproductor hasta el fondo
                 Box(
                     modifier = Modifier.align(Alignment.BottomCenter)
                 ){
+                    // Componente con un valor hardcodeado
                     ReproductorCard(albums[0])
                 }
             }

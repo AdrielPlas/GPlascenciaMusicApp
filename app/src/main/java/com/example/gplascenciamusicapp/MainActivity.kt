@@ -27,8 +27,9 @@ class MainActivity : ComponentActivity() {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     NavHost(
                         navController = navController,
-                        startDestination = HomeScreenRoute
+                        startDestination = HomeScreenRoute // Ruta de arranque
                     ){
+                        // TODAS LAS RUTAS DE LAS SCREENS ------------------------
                         composable<HomeScreenRoute> {
                             HomeScreen(
                                 navController

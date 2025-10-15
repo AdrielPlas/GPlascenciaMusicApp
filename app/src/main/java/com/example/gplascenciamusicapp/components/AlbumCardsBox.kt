@@ -31,11 +31,15 @@ import coil3.compose.AsyncImage
 import com.example.gplascenciamusicapp.models.Album
 import com.example.gplascenciamusicapp.ui.theme.BackGroundImageGradient
 
+/*
+ Componentes en el HomeScreen, parte central, que muestran la portada del album, con su nombre y artista, respecto a un LazyRow
+ */
 @Composable
 fun AlbumCardsBox(
     album : Album,
     onClick : () -> Unit
 ) {
+    // Contenedor de la imagen
     Box(
         modifier = Modifier
             .width(220.dp)
@@ -63,11 +67,13 @@ fun AlbumCardsBox(
             modifier = Modifier.fillMaxSize(),
             contentScale = ContentScale.Crop
         )
+        // Contenedor aplicar padding y que no se pegue el Box siguiente a los margenes
         Box(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(15.dp)
         ) {
+            // Contenedor para el texto alineado abajo
             Box(
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
@@ -76,18 +82,22 @@ fun AlbumCardsBox(
                     .background(BackGroundImageGradient)
                     .padding(10.dp)
             ) {
+                // Row donde estan los textos
                 Row(
                     modifier = Modifier.fillMaxWidth()
                 ) {
+                    // Alinear los textos en forma de columna
                     Column(
                         modifier = Modifier.weight(1f)
                     ) {
+                        // Nombre del album
                         Text(
                             text = album.title,
                             style = MaterialTheme.typography.titleMedium,
                             modifier = Modifier.padding(bottom = 6.dp),
                             color = Color.White
                         )
+                        // Nombre del artista
                         Text(
                             text = album.artist,
                             style = MaterialTheme.typography.bodySmall,
@@ -95,7 +105,9 @@ fun AlbumCardsBox(
                             color = Color.White
                         )
                     }
+                    // Espacio entre el texto y el icono de play
                     Spacer(modifier = Modifier.width(3.dp))
+                    // Contenedor para el icono de play
                     Box(
                         modifier = Modifier
                             .align(Alignment.CenterVertically)
@@ -104,6 +116,7 @@ fun AlbumCardsBox(
                             .background(Color.Black),
                         contentAlignment = Alignment.Center,
                         ) {
+                        // Icono de play
                         Icon(
                             imageVector = Icons.Default.PlayArrow,
                             contentDescription = "play",
