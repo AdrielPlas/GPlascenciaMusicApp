@@ -103,7 +103,6 @@ fun AlbumCardsBox(
                             .clip(CircleShape)
                             .background(Color.Black),
                         contentAlignment = Alignment.Center,
-
                         ) {
                         Icon(
                             imageVector = Icons.Default.PlayArrow,
@@ -114,6 +113,5 @@ fun AlbumCardsBox(
                 }
             }
         }
-
     }
 }
